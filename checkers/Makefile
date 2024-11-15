@@ -1,18 +1,23 @@
 CC              := gcc
 CFLAGS          := -Wall -ggdb
 CPPFLAGS        := -I./ -I/usr/X11R6/include/Xm -I/usr/X11R6/include -I/usr/include/openmotif
-#LDFLAGS         := -L/usr/lib/X11R6 -lXm -lXaw -lXmu -lXt -lX11
-LDFLAGS         := -L/usr/X11R6/lib -L /usr/X11R6/LessTif/Motif1.2/lib -lXm -lXaw -lXmu -lXt -lX11 -lICE -lSM -pthread -L/usr/lib64/openmotif/
+LDFLAGS         := -L/usr/X11R6/lib -L/usr/X11R6/LessTif/Motif1.2/lib -L/usr/lib64/openmotif/ -lX11 -lXaw -lXmu -lICE -lSM -pthread -lXt -lXm -lXext
 
-# Uncomment this next line if you'd like to compile the graphical version of the checkers server.
-#CFLAGS          += -DGRAPHICS
+all: checkers TylerBot myprog
 
-all: checkers computer
-checkers: graphics.o
-computer: myprog.o
-	${CC} ${CPPFLAGS} ${CFLAGS} -o $@ $^
+checkers: checkers.o graphics.o
+	${CC} ${CPPFLAGS} ${CFLAGS} -o $@ $^ ${LDFLAGS}
 
+TylerBot: TylerBot.o
+	${CC} ${CPPFLAGS} ${CFLAGS} -o $@ $^ ${LDFLAGS}
+
+myprog: myprog.o
+	${CC} ${CPPFLAGS} ${CFLAGS} -o $@ $^ ${LDFLAGS}
+
+# Compile object files from .c files
+%.o: %.c
+	${CC} ${CPPFLAGS} ${CFLAGS} -c $< -o $@
 
 .PHONY: clean
-clean:	
-	@-rm checkers computer *.o
+clean:
+	@-rm checkers TylerBot myprog *.o
